@@ -5,7 +5,7 @@ class HandlerInlineQuery(Handler):
         super().__init__(bot)
 
     def pressed_btn_product(self, call, code):
-        self.DB._add_orders(1,code,1)
+        self.DB._add_orders(1,code,call.from_user.id)
 
         self.bot.answer_callback_query(call.id,
             MESSAGES['product_order'].format(

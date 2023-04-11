@@ -22,7 +22,6 @@ class Singleton(type):
 class DBManager(metaclass=Singleton):
     def __init__(self):
         print('3')
-
         self.engine = create_engine(config.DATABASE)
         session = sessionmaker(bind=self.engine)
         self._session = session()
@@ -35,11 +34,11 @@ class DBManager(metaclass=Singleton):
     def close(self):
         self._session.close()
     def _add_orders(self, quantity, product_id, user_id):
-        all_id_products = self.select_all_products_id()
+        all_id_products = self.select_all_products_id(user_id)
         if product_id in all_id_products:
-            quantity_order = self.select_order_quantity(product_id)
+            quantity_order = self.select_order_quantity(product_id, user_id)
             quantity_order+=1
-            self.update_order_value(product_id, 'quantity', quantity_order)
+            self.update_order_value(product_id,user_id, 'quantity', quantity_order)
             quantity_product = self.select_single_product_quantity(product_id)
             quantity_product-=1
             self.update_product_value(product_id, 'quantity', quantity_product)
@@ -52,12 +51,12 @@ class DBManager(metaclass=Singleton):
         self._session.add(order)
         self._session.commit()
         self.close()
-    def select_all_products_id(self):
-        result = self._session.query(Order.product_id).all()
+    def select_all_products_id(self, user_id):
+        result = self._session.query(Order.product_id).filter_by(user_id = user_id).all()
         self.close()
         return utility._convert(result)
-    def select_order_quantity(self, product_id):
-        result = self._session.query(Order.quantity).filter_by(product_id=product_id).one()
+    def select_order_quantity(self, product_id, user_id):
+        result = self._session.query(Order.quantity).filter_by(product_id=product_id, user_id = user_id).one()
         self.close()
         return result.quantity
     def select_single_product_quantity(self, product_id):
@@ -74,29 +73,29 @@ class DBManager(metaclass=Singleton):
         return result.price
     # def select_single_product_quantity(self, product_id):
     #     result = self._session.query(Products.quantity).filter_by(id=product_id).one()
-    def update_order_value(self, product_id, name, value):
-        self._session.query(Order).filter_by(product_id=product_id).update({name: value})
+    def update_order_value(self, product_id,user_id, name, value):
+        self._session.query(Order).filter_by(product_id=product_id, user_id = user_id).update({name: value})
         self._session.commit()
         self.close()
     def update_product_value(self, product_id, name, value):
         self._session.query(Products).filter_by(id = product_id).update({name:value})
         self._session.commit()
         self.close()
-    def delete_order(self, product_id):
-        self._session.query(Order).filter_by(product_id=product_id).delete()
+    def delete_order(self, product_id, user_id):
+        self._session.query(Order).filter_by(product_id=product_id , user_id = user_id).delete()
         self._session.commit()
         self.close()
-    def select_all_orders_id(self):
-        result = self._session.query(Order.id).all()
+    def select_all_orders_id(self, user_id):
+        result = self._session.query(Order.id).filter_by(user_id = user_id).all()
         self.close()
         return utility._convert(result)
-    def delete_all_order(self):
-        all_id_orders = self.select_all_orders_id()
+    def delete_all_order(self, user_id):
+        all_id_orders = self.select_all_orders_id(user_id)
         for itm in all_id_orders:
             self._session.query(Order).filter_by(id=itm).delete()
             self._session.commit()
         self.close()
-    def count_rows_order(self):
-        result = self._session.query(Order).count()
+    def count_rows_order(self, user_id):
+        result = self._session.query(Order).filter_by(user_id=user_id).count()
         self.close()
         return result

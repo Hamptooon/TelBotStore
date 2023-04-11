@@ -1,8 +1,8 @@
 from handlers.handler import Handler
+from settings import config
 
 
 class HandlerCommands(Handler):
-
     def __init__(self, bot):
         super().__init__(bot)
 
