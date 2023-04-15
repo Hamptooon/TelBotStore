@@ -1,9 +1,10 @@
 from settings import config, utility
 from handlers.handler import Handler
+# from handlers.handler_inline_query import HandlerInlineQuery
+
 from settings.message import MESSAGES
 import telebot
 from telebot import types
-
 
 
 class HandlerAllText(Handler):
@@ -11,13 +12,34 @@ class HandlerAllText(Handler):
     def __init__(self, bot):
         super().__init__(bot)
         self.step = 0
+        self.isPaginationCall = False
+    def pressed_btn_product_choose(self, message, category, i = 0):
+        pages_count = int(self.DB.select_count_products_in_category(category))
+        all_products_id = self.DB.select_all_products_id_in_category(category)
+        left = i - 1 if i != 0 else pages_count - 1
+        right = i + 1 if i != pages_count - 1 else 0
+        img_path = 'media/people_benzopyla.jpg'
+        image_file = open(img_path, 'rb')
+        image_data = image_file.read()
+        image_file.close()
+        name = self.DB.select_single_product_name(all_products_id[i])
+        price = self.DB.select_single_product_price(all_products_id[i])
+        quantity = self.DB.select_single_product_quantity(all_products_id[i])
+        if self.isPaginationCall == False:
+            print(i)
+            print(left)
+            print(right)
+            self.isPaginationCall = True
+            self.message = self.bot.send_photo(message.chat.id, photo=image_data,
+                                        caption=f'{name}\nЦена: {price}\nКоличество на складе: {quantity}', reply_markup=self.keyboards.set_select_category(category, left, right, i, pages_count))
 
-    def pressed_btn_product(self,message,product):
-        self.bot.send_message(message.chat.id, 'Категория:  ' + config.KEYBOARD[product], reply_markup=self.keyboards.set_select_category(config.CATEGORY[product]))
+        else:
+            self.bot.edit_message_media(message_id= message.message_id,chat_id = message.chat.id, media=telebot.types.InputMedia(type='photo', media=image_data,caption=f'{name}\nЦена: {price}\nКоличество на складе: {quantity}'), reply_markup=self.keyboards.set_select_category(category, left, right, i, pages_count))
+    def pressed_btn_product(self,message,product_id):
+        self.bot.send_message(message.chat.id, 'Категория:  ' + config.KEYBOARD[product_id])
+        self.isPaginationCall = False
+        self.pressed_btn_product_choose(message=message, category=config.CATEGORY[product_id])
         self.bot.send_message(message.chat.id,'Выберите товар...', reply_markup=self.keyboards.category_menu())
-        # img = open(r'C:\Users\karac\Desktop\Scree.jpg', 'rb')
-        # self.bot.send_photo(message.chat.id, img, caption="Овощь")
-
     def pressed_btn_category(self,message):
         self.bot.send_message(message.chat.id, 'Выберите категорию товара...', reply_markup=self.keyboards.category_menu())
     def pressed_btn_info(self, message):
@@ -143,3 +165,22 @@ class HandlerAllText(Handler):
                 self.pressed_btn_apply(message)
             # else:
             #     self.bot.send_message(message.chat.id, message.text)
+
+        @self.bot.callback_query_handler(func=lambda call: True)
+        def callback_inline(call):
+            if 'to' in call.data:
+                page = int(call.data.split('_')[1])
+                category = call.data.split('_')[2]
+                self.pressed_btn_product_choose(call.message, category, i=page, previous_message=call.message)
+            elif 'add' in call.data:
+                page = int(call.data.split('_')[1])
+                category = call.data.split('_')[2]
+                all_products_id = self.DB.select_all_products_id_in_category(category)
+                product_id = all_products_id[page]
+                self.DB._add_orders(1, product_id, call.from_user.id)
+                self.bot.answer_callback_query(call.id,
+                                               MESSAGES['product_order'].format(self.DB.select_single_product_name(product_id ),
+                                                                                self.DB.select_single_product_price(product_id ),
+                                                                                self.DB.select_single_product_quantity(product_id )),
+                                               show_alert=True)
+                self.pressed_btn_product_choose(message=call.message, category=category, i=page)

@@ -67,11 +67,25 @@ class Keyboards:
         self. markup.row(itm_btn_9, itm_btn_1, itm_btn_8)
         return self.markup
 
-    def set_inline_btn(self, name):
-        return InlineKeyboardButton(str(name), callback_data=str(name.id))
+    def set_inline_btn(self, name, text):
+        return InlineKeyboardButton(config.KEYBOARD[name], callback_data=text)
 
-    def set_select_category(self,category):
-        self.markup = InlineKeyboardMarkup(row_width=1)
-        for itm in self.DB.select_all_products_category(category):
-            self.markup.add(self.set_inline_btn(itm))
+    #def set_select_category(self,category):
+       # self.markup = InlineKeyboardMarkup(row_width=1)
+        #for itm in self.DB.select_all_products_category(category):
+            #self.markup.add(self.set_inline_btn(itm))
+       #return self.markup
+    def set_select_category(self,category, left,right, page, pages_count):
+        self.markup = InlineKeyboardMarkup()
+        left_btn = self.set_inline_btn('BACK_STEP', f'to_{left}_{category}')
+        page_btn = InlineKeyboardButton(f"{str(page+1)}/{str(pages_count)}", callback_data='/')
+        right_btn = self.set_inline_btn('NEXT_STEP', f'to_{right}_{category}')
+        add_to_order_btn = self.set_inline_btn('ADD_TO_ORDER', f'add_{page}_{category}')
+        self.markup.add(left_btn, page_btn, right_btn)
+        self.markup.add(add_to_order_btn)
         return self.markup
+    def pressed_btn_categoty_choose(self, category):
+        self.markup = ReplyKeyboardMarkup(True, True)
+        itm_btn_1=self.set_btn('BACK_STEP')
+        itm_btn_2=self.set_btn('NEXT_STEP')
+

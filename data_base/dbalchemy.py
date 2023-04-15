@@ -28,9 +28,20 @@ class DBManager(metaclass=Singleton):
         if not path.isfile(config.DATABASE):
             Base.metadata.create_all(self.engine)
     def select_all_products_category(self, category):
+        print(category)
         result = self._session.query(Products).filter_by(category_id=category).all()
         self.close()
+        print(result)
         return result
+    def select_all_products_category_first(self, category):
+        result = self.select_all_products_category(category)
+        return result[0]
+    def select_count_products_in_category(self, category):
+        count = self._session.query(Products).filter_by(category_id= category).count()
+        return count
+    def select_all_products_id_in_category(self, category):
+        products_id = self._session.query(Products.id).filter_by(category_id = category).all()
+        return utility._convert(products_id)
     def close(self):
         self._session.close()
     def _add_orders(self, quantity, product_id, user_id):
@@ -71,6 +82,10 @@ class DBManager(metaclass=Singleton):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
         return result.price
+    def select_single_product_img(self, product_id):
+        result = self._session.query(Products).filter_by(id=product_id).one()
+        self.close()
+        return result.img_path
     # def select_single_product_quantity(self, product_id):
     #     result = self._session.query(Products.quantity).filter_by(id=product_id).one()
     def update_order_value(self, product_id,user_id, name, value):

@@ -17,6 +17,7 @@ KEYBOARD = {
     '<<': emojize('⏪'),
     '>>': emojize('⏩'),
     'BACK_STEP': emojize('◀️'),
+    'ADD_TO_ORDER': emojize('Добавить в заказ'),
     'NEXT_STEP': emojize('▶️'),
     'ORDER': emojize('✅ ЗАКАЗ'),
     'X': emojize('❌'),
@@ -25,7 +26,9 @@ KEYBOARD = {
     'AMOUNT_ORDERS': COUNT,
     'UP': emojize('🔼'),
     'APPLY': '✅ Оформить заказ',
-    'COPY': '©️'
+    'COPY': '©️',
+    'BACK_STEP': emojize('◀️'),
+    'NEXT_STEP': emojize('▶️'),
 }
 CATEGORY = {
     'CLOTH': 1,
