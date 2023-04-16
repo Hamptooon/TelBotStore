@@ -114,3 +114,8 @@ class DBManager(metaclass=Singleton):
         result = self._session.query(Order).filter_by(user_id=user_id).count()
         self.close()
         return result
+    def check_order_present(self, user_id):
+        if self.count_rows_order(user_id) == 0:
+            return False
+        else:
+            return True

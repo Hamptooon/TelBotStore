@@ -56,19 +56,28 @@ Cтоимость: {} руб
 
 На складе осталось {} ед. 
 """
-order = """
+# order = """
+#
+# <i>Название:</i> <b>{}</b>
+#
+# <i>Cтоимость:</i> <b>{} руб за 1 ед.</b>
+#
+# <i>Количество позиций:</i> <b>{} ед.</b>
+# """
+#
+# order_number = """
+#
+# <b>Позиция в заказе № </b> <i>{}</i>
+#
+# """
+order_info = """
+<b>Позиция в заказе № </b> <i>{}</i>
 
 <i>Название:</i> <b>{}</b>
 
 <i>Cтоимость:</i> <b>{} руб за 1 ед.</b>
 
 <i>Количество позиций:</i> <b>{} ед.</b> 
-"""
-
-order_number = """
-
-<b>Позиция в заказе № </b> <i>{}</i>
-
 """
 no_orders = """
 <b>Заказ отсутствует !!!</b>
@@ -87,8 +96,9 @@ apply = """
 MESSAGES = {
     'trading_store': trading_store,
     'product_order': product_order,
-    'order': order,
-    'order_number': order_number,
+    'order_info' : order_info,
+    # 'order': order,
+    # 'order_number': order_number,
     'no_orders': no_orders,
     'apply': apply,
     'settings': settings
