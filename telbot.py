@@ -23,4 +23,3 @@ class TelBot:
 if __name__ == '__main__':
     bot = TelBot()
     bot.run_bot()
-

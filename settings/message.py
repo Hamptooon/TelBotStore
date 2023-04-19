@@ -1,5 +1,6 @@
 from emoji import emojize
 from .config import KEYBOARD, VERSION, AUTHOR
+
 trading_store = f"""<b>{emojize(':fire:')}ДОБРО ПОЖАЛОВАТЬ В КОНЕЧНЫЙ ПУНКТ НАЗНАЧЕНИЯ ДЛЯ ВСЕГО ГИКОВСКОГО И КРУТОГО!{emojize(':fire:')}</b>
 
 <b>{emojize(':joystick:')} ГИКmerch</b> - это страна чудес для <i>коллекционеров</i>, <i>энтузиастов</i> и <i>суперфанатов</i>, предлагающая широкий ассортимент уникальных и захватывающих продуктов, <i>которые обязательно заставят ваше сердце биться чаще</i>. От замысловато детализированных игрушек и фигурок, которые захватывают каждую деталь ваших любимых персонажей, до стильной одежды, которая позволяет вам с гордостью <b>демонстрировать свой фандом</b>, у нас есть все!. Наш выбор кружек и других товаров для дома идеально подходит для того, чтобы добавить нотку гик-шика в вашу повседневную жизнь!{emojize(':star_struck:')}
@@ -91,15 +92,25 @@ apply = """
 <i>Общее количество позиций составляет:</i> <b>{} ед.</b>
 
 <b>ЗАКАЗ НАПРАВЛЕН НА СКЛАД,
-ДЛЯ ЕГО КОМПЛЕКТОВКИ !!!</b>
+ДЛЯ ЕГО КОМПЛЕКТОВКИ!</b>
+
+Для уточнения информации о заказе обратитесь сюда: @pixxxiz 
+"""
+product_delete_prohibition = """
+Товар не может быть удален, так как пристувует в заказе
+"""
+product_delete_successfully = """
+Товар удален из базы
 """
 MESSAGES = {
     'trading_store': trading_store,
     'product_order': product_order,
-    'order_info' : order_info,
+    'order_info': order_info,
     # 'order': order,
     # 'order_number': order_number,
     'no_orders': no_orders,
     'apply': apply,
-    'settings': settings
+    'settings': settings,
+    'product_delete_prohibition': product_delete_prohibition,
+    'product_delete_successfully': product_delete_successfully
 }

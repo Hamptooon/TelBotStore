@@ -1,7 +1,9 @@
 import os
 from emoji import emojize
+
 TOKEN = '5819700782:AAH7MqXb3_CevbScYXzU8kxZZIUiYYlucdo'
 PAYMENT_TOKEN = '1744374395:TEST:a85968c29c32f822bc4d'
+ADMIN_ID = 5175787483
 NAME_DB = 'products.db'
 VERSION = '0.0.1'
 AUTHOR = 'User'
@@ -24,13 +26,23 @@ KEYBOARD = {
     'X': emojize('❌'),
     'DOWN': emojize('🔽'),
     'AMOUNT_PRODUCT': COUNT,
+    'AMOUNT_PRODUCTS': COUNT,
     'AMOUNT_ORDERS': COUNT,
     'UP': emojize('🔼'),
     'APPLY': '✅ Оплатить',
     'COPY': '©️',
-    'BACK_STEP': emojize('◀️'),
-    'NEXT_STEP': emojize('▶️'),
+    'CHANGE_PRODUCTS': '📕 Информация о товарах',
+    'SHOW_INFO_ORDERS': '🔎 Информация о заказах',
+    'MAIN_MENU': 'В главное меню',
+    'CHANGE': 'Изменить...',
+    'CHANGE_PHOTO': '📷 Фото',
+    'CHANGE_PRICE': '💵 Цену',
+    'CHANGE_NAME': '🏷️ Имя'
+
 }
+# ADMIN_KEYBOARD={
+#     '':
+# }
 CATEGORY = {
     'CLOTH': 1,
     'FIGURINES': 2,
