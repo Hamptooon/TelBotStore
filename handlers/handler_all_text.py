@@ -7,7 +7,7 @@ from telebot import types
 
 
 class HandlerAllText(Handler):
-
+#ewerwerwe
     def __init__(self, bot):
         super().__init__(bot)
         self.step = 0
