@@ -81,7 +81,7 @@ order_info = """
 <i>Количество позиций:</i> <b>{} ед.</b> 
 """
 no_orders = """
-<b>Заказ отсутствует !!!</b>
+Заказ отсутствует !!!
 """
 
 apply = """
@@ -102,7 +102,11 @@ product_delete_prohibition = """
 product_delete_successfully = """
 Товар удален из базы
 """
+hello_message = """
+{},'f' здравствуйте ! Жду дальнейших указаний.
+"""
 MESSAGES = {
+    'hello_message': hello_message,
     'trading_store': trading_store,
     'product_order': product_order,
     'order_info': order_info,

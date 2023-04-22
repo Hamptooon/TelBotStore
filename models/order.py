@@ -1,9 +1,7 @@
 from models.product import Products
 from models.user import Users
-# from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Table, Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, backref
-# Base = declarative_base()
 from data_base.dbcore import Base
 
 

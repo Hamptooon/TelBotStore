@@ -1,8 +1,6 @@
 from sqlalchemy import Table, Column, Text, String, Integer, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
-# from sqlalchemy.ext.declarative import declarative_base
 from models.category import Category
-# Base = declarative_base()
 from data_base.dbcore import Base
 
 

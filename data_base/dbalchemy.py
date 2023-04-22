@@ -1,5 +1,9 @@
+import os
+import uuid
 from datetime import datetime
 from os import path
+import io
+from PIL import Image
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
@@ -53,9 +57,9 @@ class DBManager(metaclass=Singleton):
         self._session.close()
 
     def add_order(self, quantity, product_id, user_id):
-        all_id_products = self.select_all_products_id(user_id)
+        all_id_products = self.select_all_products_id_in_order_by_user(user_id)
         if product_id in all_id_products:
-            quantity_order = self.select_order_quantity(product_id, user_id)
+            quantity_order = self.select_quantity_product_in_order(product_id, user_id)
             quantity_order += 1
             self.update_order_value(product_id, user_id, 'quantity', quantity_order)
             quantity_product = self.select_single_product_quantity(product_id)
@@ -71,12 +75,12 @@ class DBManager(metaclass=Singleton):
         self._session.commit()
         self.close()
 
-    def select_all_products_id(self, user_id):
+    def select_all_products_id_in_order_by_user(self, user_id):
         result = self._session.query(Order.product_id).filter_by(user_id=user_id).all()
         self.close()
         return utility.convert(result)
 
-    def select_order_quantity(self, product_id, user_id):
+    def select_quantity_product_in_order(self, product_id, user_id):
         result = self._session.query(Order.quantity).filter_by(product_id=product_id, user_id=user_id).one()
         self.close()
         return result.quantity
@@ -95,11 +99,20 @@ class DBManager(metaclass=Singleton):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
         return result.price
-
+    def select_single_product_image_path(self, product_id):
+        result = self._session.query(Products).filter_by(id=product_id).one()
+        self.close()
+        return result.img_path
     def select_single_product_info(self, product_id):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
         return result.name, result.price, result.quantity
+
+    def select_single_product_info_in_shopping_cart(self, product_id, user_id):
+        result = self._session.query(Products).filter_by(id=product_id).one()
+        result_quantity = self._session.query(Order.quantity).filter_by(product_id=product_id, user_id=user_id).one()
+        self.close()
+        return result.name, result.price, result_quantity.quantity
 
     def select_single_product_img(self, product_id):
         result = self._session.query(Products).filter_by(id=product_id).one()
@@ -120,7 +133,29 @@ class DBManager(metaclass=Singleton):
         self._session.query(Order).filter_by(product_id=product_id, user_id=user_id).delete()
         self._session.commit()
         self.close()
+    def update_name_product(self, product_id, new_name):
+        self._session.query(Products).filter_by(id=product_id).update({'name': new_name})
+        self._session.commit()
+        self.close()
+    def update_price_product(self, product_id, new_price):
+        self._session.query(Products).filter_by(id=product_id).update({'price': new_price})
+        self._session.commit()
+        self.close()
+    def update_image_product(self, product_id, new_image):
+        now = datetime.now()
+        current_time = now.strftime("%Y_%m_%d_%H_%M_%S")
+        product_name = self.select_single_product_name(product_id)
+        format_product_name = product_name.replace(" ", "_").replace("/", "_")
+        old_image_path = self.select_single_product_image_path(product_id)
+        os.remove(old_image_path)
+        image_name = f'{current_time}_{format_product_name}.jpg'
+        image_path = 'media/' + image_name
+        with open(image_path, 'wb') as image:
+            image.write(new_image)
 
+        self._session.query(Products).filter_by(id=product_id).update({'img_path': image_path})
+        self._session.commit()
+        self.close()
     def select_all_orders_id(self, user_id):
         result = self._session.query(Order.id).filter_by(user_id=user_id).all()
         self.close()
