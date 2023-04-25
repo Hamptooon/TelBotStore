@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from data_base.dbcore import Base
+from models.category import Category
 from settings import config
 from models.product import Products
 from models.order import Order
@@ -99,10 +100,12 @@ class DBManager(metaclass=Singleton):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
         return result.price
+
     def select_single_product_image_path(self, product_id):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
         return result.img_path
+
     def select_single_product_info(self, product_id):
         result = self._session.query(Products).filter_by(id=product_id).one()
         self.close()
@@ -133,14 +136,17 @@ class DBManager(metaclass=Singleton):
         self._session.query(Order).filter_by(product_id=product_id, user_id=user_id).delete()
         self._session.commit()
         self.close()
+
     def update_name_product(self, product_id, new_name):
         self._session.query(Products).filter_by(id=product_id).update({'name': new_name})
         self._session.commit()
         self.close()
+
     def update_price_product(self, product_id, new_price):
         self._session.query(Products).filter_by(id=product_id).update({'price': new_price})
         self._session.commit()
         self.close()
+
     def update_image_product(self, product_id, new_image):
         now = datetime.now()
         current_time = now.strftime("%Y_%m_%d_%H_%M_%S")
@@ -156,6 +162,21 @@ class DBManager(metaclass=Singleton):
         self._session.query(Products).filter_by(id=product_id).update({'img_path': image_path})
         self._session.commit()
         self.close()
+
+    def add_product(self, category_id, name, price,quantity, image_bytes):
+        # new_product = Products(category=category_id, name=name, price=price, im )
+        now = datetime.now()
+        current_time = now.strftime("%Y_%m_%d_%H_%M_%S")
+        format_product_name = name.replace(" ", "_").replace("/", "_")
+        image_name = f'{current_time}_{format_product_name}.jpg'
+        image_path = 'media/' + image_name
+        with open(image_path, 'wb') as image:
+            image.write(image_bytes)
+        new_product = Products(category=category_id, name=name, price=price,quantity=quantity, img_path=image_path)
+        self._session.add(new_product)
+        self._session.commit()
+        self.close()
+
     def select_all_orders_id(self, user_id):
         result = self._session.query(Order.id).filter_by(user_id=user_id).all()
         self.close()
@@ -170,8 +191,8 @@ class DBManager(metaclass=Singleton):
 
     def delete_product(self, product_id):
         self._session.query(Products).filter_by(id=product_id).delete()
-        # self._session.commit()
-        # self.close()
+        self._session.commit()
+        self.close()
 
     def count_rows_order(self, user_id):
         result = self._session.query(Order).filter_by(user_id=user_id).count()
@@ -200,7 +221,18 @@ class DBManager(metaclass=Singleton):
         user = self._session.query(Users).filter_by(id=user_id).one()
         self.close()
         return user
-
+    def select_category(self, category_id):
+        category = self._session.query(Category).filter_by(id=category_id).one()
+        self.close()
+        return category
+    def select_user_from_info_users(self, current_user_index):
+        users = self.select_all_users()
+        current_user = users[current_user_index]
+        return current_user.id
+    def select_all_users(self):
+        users = self._session.query(Users).all()
+        self.close()
+        return users
     def user_exists(self, user_id):
         try:
             self._session.query(Users).filter_by(id=user_id).one()
@@ -216,3 +248,6 @@ class DBManager(metaclass=Singleton):
             return False
         else:
             return True
+    def select_user_order_info(self, user_id):
+        products_in_order = self._session.query(Order).filter_by(user_id=user_id).all()
+        return products_in_order

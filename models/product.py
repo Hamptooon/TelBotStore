@@ -11,7 +11,6 @@ class Products(Base):
     name = Column(String, index=True)
     price = Column(Float)
     quantity = Column(Integer)
-    is_active = Column(Boolean)
     category_id = Column(Integer, ForeignKey('category.id'))
     img_path = Column(Text)
     category = relationship(Category, backref=backref('products', uselist=True, cascade='delete,all'))

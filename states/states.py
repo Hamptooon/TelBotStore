@@ -6,3 +6,14 @@ class ProductChangeStatesGroup(StatesGroup):
     name = State()
     price = State()
     image = State()
+
+
+class CreateProductStatesGroup(StatesGroup):
+    category = State()
+    name = State()
+    price = State()
+    quantity = State()
+    image = State()
+
+class SearchUserById(StatesGroup):
+    user_id = State()

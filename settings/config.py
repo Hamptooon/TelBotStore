@@ -17,7 +17,7 @@ KEYBOARD = {
     'CLOTH': emojize(':kimono: Одежда'),
     'FIGURINES': emojize(':robot: Фигурки'),
     'MUGS': emojize(':hot_beverage: Кружки'),
-    '<<': emojize('⏪'),
+    '<<': '📖 В главное меню',
     '>>': emojize('⏩'),
     'BACK_STEP': emojize('◀️'),
     'ADD_TO_ORDER': emojize('Добавить в заказ'),
@@ -28,6 +28,7 @@ KEYBOARD = {
     'AMOUNT_PRODUCT': COUNT,
     'AMOUNT_PRODUCTS': COUNT,
     'AMOUNT_ORDERS': COUNT,
+    'AMOUNT_USERS': COUNT,
     'UP': emojize('🔼'),
     'APPLY': '✅ Оплатить',
     'COPY': '©️',
@@ -37,7 +38,10 @@ KEYBOARD = {
     'CHANGE': 'Изменить...',
     'CHANGE_PHOTO': '📷 Фото',
     'CHANGE_PRICE': '💵 Цену',
-    'CHANGE_NAME': '🏷️ Имя'
+    'CHANGE_NAME': '🏷️ Имя',
+    'ADD_PRODUCT': '📝 Добавить товар',
+    'CHOOSE_USER': 'Выбрать пользователя',
+    'SEARCH_USER': 'Поиск по id'
 
 }
 # ADMIN_KEYBOARD={
@@ -52,5 +56,9 @@ COMMANDS = {
     'START': "start",
     'HELP': "help",
 }
-
+CATEGORIES_NAME = {
+    '1': 'Одежда',
+    '2': 'Фигурки',
+    '3': 'Кружки'
+}
 MESSAGES = {}

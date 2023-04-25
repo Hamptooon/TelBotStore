@@ -16,4 +16,6 @@ class Users(Base):
 <b>Имя:{self.first_name}</b>
 <b>Фамилия:{self.last_name}</b>
                 
-<b>☎️Контакты:{self.contact}</b>"""
+<b>☎️Контакты:{self.contact}</b>
+
+"""

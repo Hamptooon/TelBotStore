@@ -17,6 +17,8 @@ class HandlerCommands(Handler):
         else:
             await self.bot.send_message(chat_id=message.chat.id, text=hello_message,
                                         reply_markup=self.keyboards.start_menu())
+        await self.bot.send_sticker(message.from_user.id,
+                                    sticker='CAACAgIAAxkBAAEItqVkRusN1tqC6Os6fx7oTwXQ8PvNnwACaxsAAh5daEs-Fz0zds-_9i8E')
 
     async def handle(self):
         @self.dp.message_handler(commands=['start'])
